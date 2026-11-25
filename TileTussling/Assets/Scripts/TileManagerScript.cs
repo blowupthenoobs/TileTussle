@@ -41,7 +41,7 @@ public class TileManagerScript : MonoBehaviour
                 var newTile = Instantiate(tilePrefab, new Vector3(x, y), transform.rotation);
                 tiles[x].Add(newTile);
                 
-                newTile.transform.SetParent(tiles[x][y].transform);
+                newTile.transform.SetParent(transform);
                 newTile.GetComponent<TileScript>().Spawn(test.getTile(x, y));
             }
         }

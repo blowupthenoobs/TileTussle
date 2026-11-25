@@ -15,7 +15,7 @@ public class CustomMapData : PropertyDrawer
         EditorGUI.PrefixLabel(position, label);
         SerializedProperty rows = property.FindPropertyRelative("matrix");
 
-        float cellWidth = 50;
+        float cellWidth = 15;
         float cellHeight = 15;
         float spacing = 1f;
 
@@ -69,7 +69,7 @@ public class CustomMapData : PropertyDrawer
             }
         }
 
-        float gridHeight = rows.arraySize * (cellHeight + spacing);
+        float gridHeight = rows.GetArrayElementAtIndex(0).FindPropertyRelative("tiles").arraySize * (cellHeight + spacing);
         if(rows.arraySize > 0)
         {
             Rect columnButtonRect = new Rect(currentX, position.y + 20f, 25f, gridHeight - spacing);
@@ -84,11 +84,6 @@ public class CustomMapData : PropertyDrawer
                     rows.DeleteArrayElementAtIndex(rows.arraySize - 1);
             }
         }
-        
-
-        
-        
-
     }
 
     public Color GetTileColor(TileType type)
