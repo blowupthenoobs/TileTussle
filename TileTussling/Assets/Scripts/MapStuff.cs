@@ -16,5 +16,10 @@ namespace MapStuff
         }
 
         public List<TileRow> matrix;
+
+        public TileType getTile(int x, int y)
+        {
+            return matrix[y].tiles[x];
+        }
     }
 }
