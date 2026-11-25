@@ -35,13 +35,15 @@ public class CustomMapData : PropertyDrawer
                 SerializedProperty tile = row.GetArrayElementAtIndex(j);
                 EditorGUI.DrawRect(cellRect, GetTileColor((TileType)tile.enumValueIndex));
 
-                if(GUI.Button(cellRect, GUIContent.none, GUIStyle.none))
-                {
-                    tile.enumValueIndex++;
+                tile.enumValueIndex = EditorGUI.Popup(cellRect, tile.enumValueIndex, tile.enumNames, GUIStyle.none);
+                // if(GUI.Button(cellRect, GUIContent.none, GUIStyle.none))
+                // {
+                //     // tile.enumValueIndex++;
 
-                    if(tile.enumValueIndex >= tile.enumNames.Length)
-                        tile.enumValueIndex = 0;
-                }
+                //     // if(tile.enumValueIndex >= tile.enumNames.Length)
+                //     //     tile.enumValueIndex = 0;
+
+                // }
 
                 currentX += cellWidth + spacing;
                 
@@ -92,7 +94,7 @@ public class CustomMapData : PropertyDrawer
             switch(type)
             {
                 case TileType.empty:
-                    return new Color(64/255, 64/255, 64/255, 1);
+                    return new Color(64f/255f, 64f/255f, 64f/255f, 1);
                 case TileType.grass:
                     return Color.green;
                 case TileType.sand:
