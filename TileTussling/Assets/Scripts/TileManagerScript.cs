@@ -32,16 +32,16 @@ public class TileManagerScript : MonoBehaviour
 
     void GenerateGrid()
     {
-        for(int y = 0; y < test.matrix.Count; y++)
+        for(int x = 0; x < test.matrix.Count; x++)
         {
             tiles.Add(new List<GameObject>());
 
-            for(int x = 0; x < test.matrix[y].tiles.Count; x++)
+            for(int y = 0; y < test.matrix[x].tiles.Count; y++)
             {
                 var newTile = Instantiate(tilePrefab, new Vector3(x, y), transform.rotation);
-                tiles[y].Add(newTile);
+                tiles[x].Add(newTile);
                 
-                newTile.transform.SetParent(tiles[y][x].transform);
+                newTile.transform.SetParent(tiles[x][y].transform);
                 newTile.GetComponent<TileScript>().Spawn(test.getTile(x, y));
             }
         }

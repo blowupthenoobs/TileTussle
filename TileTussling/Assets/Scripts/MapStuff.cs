@@ -20,7 +20,7 @@ namespace MapStuff
 
         public TileType getTile(int x, int y)
         {
-            return matrix[y].tiles[x];
+            return matrix[x].tiles[y];
         }
     }
 }

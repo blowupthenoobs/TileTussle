@@ -91,7 +91,7 @@ public class CustomMapData : PropertyDrawer
 
     }
 
-    Color GetTileColor(TileType type)
+    public Color GetTileColor(TileType type)
     {
         switch(type)
         {
