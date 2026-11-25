@@ -31,19 +31,15 @@ public class CustomMapData : PropertyDrawer
             for(int j = 0; j < row.arraySize; j++)
             {
                 Rect cellRect = new Rect(currentX, currentY, cellWidth, cellHeight);
-                // EditorGUI.PropertyField(cellRect, row.GetArrayElementAtIndex(j), GUIContent.none);
+                
                 SerializedProperty tile = row.GetArrayElementAtIndex(j);
                 EditorGUI.DrawRect(cellRect, GetTileColor((TileType)tile.enumValueIndex));
 
-                tile.enumValueIndex = EditorGUI.Popup(cellRect, tile.enumValueIndex, tile.enumNames, GUIStyle.none);
-                // if(GUI.Button(cellRect, GUIContent.none, GUIStyle.none))
-                // {
-                //     // tile.enumValueIndex++;
-
-                //     // if(tile.enumValueIndex >= tile.enumNames.Length)
-                //     //     tile.enumValueIndex = 0;
-
-                // }
+                if(GUI.Button(cellRect, GUIContent.none, GUIStyle.none))
+                {
+                    ShowTileMenu(tile);
+                }
+                // tile.enumValueIndex = EditorGUI.Popup(cellRect, tile.enumValueIndex, tile.enumNames, GUIStyle.none);
 
                 currentX += cellWidth + spacing;
                 
@@ -89,21 +85,42 @@ public class CustomMapData : PropertyDrawer
             }
         }
         
-        Color GetTileColor(TileType type)
+
+        
+        
+
+    }
+
+    Color GetTileColor(TileType type)
+    {
+        switch(type)
         {
-            switch(type)
+            case TileType.empty:
+                return new Color(64f/255f, 64f/255f, 64f/255f, 1);
+            case TileType.grass:
+                return Color.green;
+            case TileType.sand:
+                return Color.yellow;
+            default:
+                return Color.magenta;
+        }
+    }
+    
+    private void ShowTileMenu(SerializedProperty tile)
+    {
+        GenericMenu menu = new GenericMenu();
+
+        for(int i = 0; i < tile.enumNames.Length; i++)
+        {
+            int index = i;
+            menu.AddItem(new GUIContent(tile.enumNames[i]), tile.enumValueIndex == index, () =>
             {
-                case TileType.empty:
-                    return new Color(64f/255f, 64f/255f, 64f/255f, 1);
-                case TileType.grass:
-                    return Color.green;
-                case TileType.sand:
-                    return Color.yellow;
-                default:
-                    return Color.magenta;
-            }
+                tile.enumValueIndex = index;
+                tile.serializedObject.ApplyModifiedProperties();
+            });
         }
 
+        menu.ShowAsContext();
     }
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
