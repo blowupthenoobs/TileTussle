@@ -22,9 +22,6 @@ public class CustomMapData : PropertyDrawer
         float startX = position.x;
         float currentY = position.y + 20f;
 
-        // Rect newPosition = position;
-        // newPosition.y += 18f;
-
         for(int i = 0; i < rows.arraySize; i++)
         {
             SerializedProperty row = rows.GetArrayElementAtIndex(i).FindPropertyRelative("tiles");
@@ -34,24 +31,22 @@ public class CustomMapData : PropertyDrawer
             for(int j = 0; j < row.arraySize; j++)
             {
                 Rect cellRect = new Rect(currentX, currentY, cellWidth, cellHeight);
-                EditorGUI.PropertyField(cellRect, row.GetArrayElementAtIndex(j), GUIContent.none);
+                // EditorGUI.PropertyField(cellRect, row.GetArrayElementAtIndex(j), GUIContent.none);
+                SerializedProperty tile = row.GetArrayElementAtIndex(j);
+                EditorGUI.DrawRect(cellRect, GetTileColor((TileType)tile.enumValueIndex));
+
+                if(GUI.Button(cellRect, GUIContent.none, GUIStyle.none))
+                {
+                    tile.enumValueIndex++;
+
+                    if(tile.enumValueIndex >= tile.enumNames.Length)
+                        tile.enumValueIndex = 0;
+                }
 
                 currentX += cellWidth + spacing;
                 
             }
             currentY += cellHeight + spacing;
-
-            // Rect addButton = new Rect(currentX + 20, currentY - (cellHeight + spacing), 20f, 20f);
-            // if(GUI.Button(addButton, "+"))
-            // {
-            //     row.InsertArrayElementAtIndex(row.arraySize);
-            // }
-            // addButton.x += 20f;
-            // if(GUI.Button(addButton, "-"))
-            // {
-            //     if(row.arraySize > 0)
-            //         row.DeleteArrayElementAtIndex(row.arraySize - 1);
-            // }
         }
 
         EditorGUI.EndProperty();
@@ -77,7 +72,6 @@ public class CustomMapData : PropertyDrawer
                 {
                     SerializedProperty row = rows.GetArrayElementAtIndex(i).FindPropertyRelative("tiles");
                     row.InsertArrayElementAtIndex(row.arraySize);
-                    // row.GetArrayElementAtIndex(row.arraySize - 1)
                 }
             }
             columnButtonRect.x += 25;
@@ -89,7 +83,6 @@ public class CustomMapData : PropertyDrawer
 
                     if(row.arraySize > 0)
                         row.DeleteArrayElementAtIndex(row.arraySize - 1);
-                    // row.GetArrayElementAtIndex(row.arraySize - 1)
                 }
             }
         }
@@ -99,7 +92,7 @@ public class CustomMapData : PropertyDrawer
             switch(type)
             {
                 case TileType.empty:
-                    return new Color(64, 64, 64, 255);
+                    return new Color(64/255, 64/255, 64/255, 1);
                 case TileType.grass:
                     return Color.green;
                 case TileType.sand:
