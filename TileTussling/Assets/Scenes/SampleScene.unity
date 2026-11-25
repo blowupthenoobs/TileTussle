@@ -154,6 +154,8 @@ MonoBehaviour:
   width: 30
   height: 20
   tilePrefab: {fileID: 1569667886038539282, guid: 39edb6c27681c834082140f5a457d45b, type: 3}
+  test:
+    matrix: []
   tree: {fileID: 0}
   rock: {fileID: 0}
   shoots: 0

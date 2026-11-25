@@ -30,7 +30,7 @@ public class CustomMapData : PropertyDrawer
             SerializedProperty row = rows.GetArrayElementAtIndex(i).FindPropertyRelative("tiles");
             float currentX = startX;
 
-            Debug.Log(row.arraySize);
+            // Debug.Log(row.arraySize);
             for(int j = 0; j < row.arraySize; j++)
             {
                 Rect cellRect = new Rect(currentX, currentY, cellWidth, cellHeight);
@@ -50,7 +50,7 @@ public class CustomMapData : PropertyDrawer
             if(GUI.Button(addButton, "-"))
             {
                 if(row.arraySize > 0)
-                    row.DeleteArrayElementAtIndex(rows.arraySize - 1);
+                    row.DeleteArrayElementAtIndex(row.arraySize - 1);
             }
         }
 

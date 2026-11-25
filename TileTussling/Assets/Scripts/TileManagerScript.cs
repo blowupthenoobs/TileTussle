@@ -27,21 +27,6 @@ public class TileManagerScript : MonoBehaviour
             Destroy(gameObject);
 
         GenerateGrid();
-
-        // GenerateObstical(50, tree);
-        // GenerateBigObstical(2, rock);
-        test.matrix = new List<Map.TileRow>();
-        var temp = new Map.TileRow();
-        temp.tiles = new List<TileType>();
-        temp.tiles.Add(TileType.empty);
-        temp.tiles.Add(TileType.empty);
-        temp.tiles.Add(TileType.empty);
-        temp.tiles.Add(TileType.empty);
-        test.matrix.Add(temp);
-        test.matrix.Add(temp);
-        test.matrix.Add(temp);
-        test.matrix.Add(temp);
-        test.matrix.Add(temp);
     }
 
     void GenerateGrid()
