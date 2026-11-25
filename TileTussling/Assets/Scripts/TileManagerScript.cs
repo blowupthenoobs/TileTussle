@@ -15,6 +15,7 @@ public class TileManagerScript : MonoBehaviour
     [SerializeField] private GameObject tree;
     [SerializeField] private GameObject rock;
 
+    
     public List<List<GameObject>> tiles = new List<List<GameObject>>();
 
     public int shoots;

@@ -19,13 +19,13 @@ public class CustomMapData : PropertyDrawer
         float cellHeight = 15;
         float spacing = 1f;
 
-        float startX = position.x;
-        float currentY = position.y + 20f;
+        float startY = position.y + 20f;
+        float currentX = position.x;
 
         for(int i = 0; i < rows.arraySize; i++)
         {
             SerializedProperty row = rows.GetArrayElementAtIndex(i).FindPropertyRelative("tiles");
-            float currentX = startX;
+            float currentY = startY;
 
             // Debug.Log(row.arraySize);
             for(int j = 0; j < row.arraySize; j++)
@@ -41,47 +41,47 @@ public class CustomMapData : PropertyDrawer
                 }
                 // tile.enumValueIndex = EditorGUI.Popup(cellRect, tile.enumValueIndex, tile.enumNames, GUIStyle.none);
 
-                currentX += cellWidth + spacing;
+                currentY += cellHeight + spacing;
                 
             }
-            currentY += cellHeight + spacing;
+            currentX += cellWidth + spacing;
         }
 
         EditorGUI.EndProperty();
-        Rect rowButtonRect = new Rect(position.x, currentY, 25f, 20f);
+        Rect rowButtonRect = new Rect(position.x, startY + (rows.GetArrayElementAtIndex(0).FindPropertyRelative("tiles").arraySize * (cellHeight + spacing)), 25f, 20f);
         if(GUI.Button(rowButtonRect, "+"))
         {
-            rows.InsertArrayElementAtIndex(rows.arraySize);
+            for(int i = 0; i < rows.arraySize; i++)
+            {
+                SerializedProperty row = rows.GetArrayElementAtIndex(i).FindPropertyRelative("tiles");
+                row.InsertArrayElementAtIndex(row.arraySize);
+            }
         }
         rowButtonRect.x += 25f;
         if(GUI.Button(rowButtonRect, "-"))
         {
-            if(rows.arraySize > 0)
-                rows.DeleteArrayElementAtIndex(rows.arraySize - 1);
+            for(int i = 0; i < rows.arraySize; i++)
+            {
+                SerializedProperty row = rows.GetArrayElementAtIndex(i).FindPropertyRelative("tiles");
+
+                if(row.arraySize > 0)
+                    row.DeleteArrayElementAtIndex(row.arraySize - 1);
+            }
         }
 
         float gridHeight = rows.arraySize * (cellHeight + spacing);
         if(rows.arraySize > 0)
         {
-            Rect columnButtonRect = new Rect(startX + (rows.GetArrayElementAtIndex(0).FindPropertyRelative("tiles").arraySize * (cellWidth + spacing)), position.y + 20f, 25f, gridHeight - spacing);
+            Rect columnButtonRect = new Rect(currentX, position.y + 20f, 25f, gridHeight - spacing);
             if(GUI.Button(columnButtonRect, "+"))
             {
-                for(int i = 0; i < rows.arraySize; i++)
-                {
-                    SerializedProperty row = rows.GetArrayElementAtIndex(i).FindPropertyRelative("tiles");
-                    row.InsertArrayElementAtIndex(row.arraySize);
-                }
+                rows.InsertArrayElementAtIndex(rows.arraySize);
             }
             columnButtonRect.x += 25;
             if(GUI.Button(columnButtonRect, "-"))
             {
-                for(int i = 0; i < rows.arraySize; i++)
-                {
-                    SerializedProperty row = rows.GetArrayElementAtIndex(i).FindPropertyRelative("tiles");
-
-                    if(row.arraySize > 0)
-                        row.DeleteArrayElementAtIndex(row.arraySize - 1);
-                }
+                if(rows.arraySize > 0)
+                    rows.DeleteArrayElementAtIndex(rows.arraySize - 1);
             }
         }
         
@@ -125,6 +125,6 @@ public class CustomMapData : PropertyDrawer
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        return 80 + property.FindPropertyRelative("matrix").arraySize * 12;
+        return 80 + property.FindPropertyRelative("matrix").GetArrayElementAtIndex(0).FindPropertyRelative("tiles").arraySize * 12;
     }
 }
