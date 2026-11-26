@@ -48,7 +48,10 @@ public class CustomMapData : PropertyDrawer
         }
 
         EditorGUI.EndProperty();
-        Rect rowButtonRect = new Rect(position.x, startY + (rows.GetArrayElementAtIndex(0).FindPropertyRelative("tiles").arraySize * (cellHeight + spacing)), 25f, 20f);
+        Rect rowButtonRect = new Rect(position.x, startY, 25f, 20f);
+        if(rows.arraySize > 0)
+            rowButtonRect.y += rows.GetArrayElementAtIndex(0).FindPropertyRelative("tiles").arraySize * (cellHeight + spacing);
+
         if(GUI.Button(rowButtonRect, "+"))
         {
             for(int i = 0; i < rows.arraySize; i++)
@@ -69,9 +72,10 @@ public class CustomMapData : PropertyDrawer
             }
         }
 
-        float gridHeight = rows.GetArrayElementAtIndex(0).FindPropertyRelative("tiles").arraySize * (cellHeight + spacing);
         if(rows.arraySize > 0)
         {
+            float gridHeight = rows.GetArrayElementAtIndex(0).FindPropertyRelative("tiles").arraySize * (cellHeight + spacing);
+            
             Rect columnButtonRect = new Rect(currentX, position.y + 20f, 25f, gridHeight - spacing);
             if(GUI.Button(columnButtonRect, "+"))
             {
@@ -120,6 +124,9 @@ public class CustomMapData : PropertyDrawer
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        return 80 + property.FindPropertyRelative("matrix").GetArrayElementAtIndex(0).FindPropertyRelative("tiles").arraySize * 12;
+        if(property.FindPropertyRelative("matrix").arraySize > 0)
+            return 80 + property.FindPropertyRelative("matrix").GetArrayElementAtIndex(0).FindPropertyRelative("tiles").arraySize * 12;
+        else
+            return 20 * 12;
     }
 }

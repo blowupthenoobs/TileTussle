@@ -10,10 +10,12 @@ public class TileManagerScript : MonoBehaviour
     [SerializeField] public int width, height;
 
     [SerializeField] private GameObject tilePrefab;
-    [SerializeField] Map test;
+    [SerializeField] GameObject cameraObject;
+    [SerializeField] MapItem mapData;
 
     [SerializeField] private GameObject tree;
     [SerializeField] private GameObject rock;
+    [SerializeField] private GameObject testMarker;
 
     
     public List<List<GameObject>> tiles = new List<List<GameObject>>();
@@ -32,19 +34,49 @@ public class TileManagerScript : MonoBehaviour
 
     void GenerateGrid()
     {
-        for(int x = 0; x < test.matrix.Count; x++)
+        for(int x = 0; x < mapData.map.matrix.Count; x++)
         {
             tiles.Add(new List<GameObject>());
 
-            for(int y = 0; y < test.matrix[x].tiles.Count; y++)
+            for(int y = 0; y < mapData.map.matrix[x].tiles.Count; y++)
             {
                 var newTile = Instantiate(tilePrefab, new Vector3(x, y), transform.rotation);
                 tiles[x].Add(newTile);
                 
                 newTile.transform.SetParent(transform);
-                newTile.GetComponent<TileScript>().Spawn(test.getTile(x, y));
+                newTile.name = "(" + x.ToString() + ", " + y.ToString() + ")";
+                newTile.GetComponent<TileScript>().Spawn(mapData.map.getTile(x, mapData.map.matrix[x].tiles.Count - (y + 1)));
             }
         }
+
+        SetCameraPosition((float)mapData.map.matrix.Count / 2, (float)mapData.map.matrix[0].tiles.Count / 2);
+        CalculateBounds();
+    }
+
+    void SetCameraPosition(float x, float y)
+    {
+        var newPos = new Vector3(x -.5f, y -.5f, -10);
+        cameraObject.transform.position = newPos;
+    }
+
+    void CalculateBounds()
+    {
+        CameraControls.upperBounds = new Vector2(tiles.Count - 0.5f, tiles[tiles.Count - 1].Count - .5f);
+        CameraControls.lowerBounds = new Vector2(-.5f, -.5f);
+        Instantiate(testMarker, CameraControls.upperBounds, transform.rotation);
+        Instantiate(testMarker, CameraControls.lowerBounds, transform.rotation);
+
+        CameraControls.UpdateBounds();
+    }
+
+    public GameObject GetTile(int x, int y)
+    {
+        if(x < 0 || x >= tiles.Count)
+            return null;
+        if(y < 0 || y >= tiles[x].Count)
+            return null;
+        
+        return tiles[x][y];
     }
 
     void GenerateObstical(int spawns, GameObject item)
