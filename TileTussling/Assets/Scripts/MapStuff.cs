@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MapStuff
 {
-    public enum TileType {empty, grass, sand};
+    public enum TileType {empty, grass, sand, playerGrass, enemyGrass};
 
     [System.Serializable]
     public struct Map

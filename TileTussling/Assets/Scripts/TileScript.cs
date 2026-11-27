@@ -7,8 +7,8 @@ using UnityEngine.Events;
 public class TileScript : MonoBehaviour
 {
     private SpriteRenderer image;
-    public bool occupied;
     public TileType tileType;
+    public GameObject heldItem;
 
     public TileScript topTile, rightTile, bottomTile, leftTile;
     public static UnityAction clearTileEffects;
@@ -24,6 +24,17 @@ public class TileScript : MonoBehaviour
         GetComponent<SpriteRenderer>().color = GetTileColor(type);
         GetNeighbors();
         clearTileEffects += ResetTileColor;
+
+        if(type == TileType.playerGrass)
+            ObtainItem(Instantiate(TileManagerScript.Instance.playerPrefab, transform.position, transform.rotation));
+        if(type == TileType.enemyGrass)
+            ObtainItem(Instantiate(TileManagerScript.Instance.enemyPrefab, transform.position, transform.rotation));
+    }
+
+    public void ObtainItem(GameObject item)
+    {
+        heldItem = item;
+        item.transform.SetParent(transform);
     }
 
     void GetNeighbors()
@@ -35,6 +46,44 @@ public class TileScript : MonoBehaviour
         bottomTile?.GiveTopNeighbor(this);
     }
 
+    public void MakeBlue()
+    {
+        GetComponent<SpriteRenderer>().color = Color.blue;
+    }
+
+    public void GetTilesOfDistance(int distance)
+    {
+        if(tileType != TileType.empty)
+        {
+            MakeBlue();
+
+            if(distance > 0)
+            {
+                rightTile.GetTilesOfDistance(distance - 1);
+                topTile.GetTilesOfDistance(distance - 1);
+                leftTile.GetTilesOfDistance(distance - 1);
+                bottomTile.GetTilesOfDistance(distance - 1);    
+            }
+        }
+    }
+
+
+    public TileScript GetNeighborOfDirection(Vector2 direction)
+    {
+        if(direction == Vector2.up)
+            return topTile;
+        if(direction == Vector2.down)
+            return bottomTile;
+        if(direction == Vector2.left)
+            return leftTile;
+        if(direction == Vector2.right)
+            return rightTile;
+        
+        Debug.Log("no tile for following direction");
+        Debug.Log(direction);
+        return this;    
+    }
+
     public void GiveRightNeighbor(TileScript neighbor)
     {
         rightTile = neighbor;
@@ -44,17 +93,10 @@ public class TileScript : MonoBehaviour
     {
         topTile = neighbor;
     }
-
-    public void MakeBlue()
-    {
-        GetComponent<SpriteRenderer>().color = Color.blue;
-    }
-
     private void ResetTileColor()
     {
         GetComponent<SpriteRenderer>().color = GetTileColor(tileType);
     }
-
     public Color GetTileColor(TileType type)
     {
         switch(type)
@@ -65,6 +107,10 @@ public class TileScript : MonoBehaviour
                 return Color.green;
             case TileType.sand:
                 return Color.yellow;
+            case TileType.playerGrass:
+                return Color.green;
+            case TileType.enemyGrass:
+                return Color.green;
             default:
                 return Color.magenta;
         }

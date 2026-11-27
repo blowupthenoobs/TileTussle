@@ -75,7 +75,7 @@ public class CustomMapData : PropertyDrawer
         if(rows.arraySize > 0)
         {
             float gridHeight = rows.GetArrayElementAtIndex(0).FindPropertyRelative("tiles").arraySize * (cellHeight + spacing);
-            
+
             Rect columnButtonRect = new Rect(currentX, position.y + 20f, 25f, gridHeight - spacing);
             if(GUI.Button(columnButtonRect, "+"))
             {
@@ -100,6 +100,10 @@ public class CustomMapData : PropertyDrawer
                 return Color.green;
             case TileType.sand:
                 return Color.yellow;
+            case TileType.playerGrass:
+                return Color.white;
+            case TileType.enemyGrass:
+                return Color.red;
             default:
                 return Color.magenta;
         }

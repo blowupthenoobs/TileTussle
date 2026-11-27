@@ -7,14 +7,18 @@ using MapStuff;
 public class TileManagerScript : MonoBehaviour
 {
     public static TileManagerScript Instance;
-    [SerializeField] public int width, height;
+    // [SerializeField] public int width, height;
 
     [SerializeField] private GameObject tilePrefab;
     [SerializeField] GameObject cameraObject;
     [SerializeField] MapItem mapData;
+    public GameObject playerPrefab;
+    public GameObject enemyPrefab;
 
     [SerializeField] private GameObject tree;
     [SerializeField] private GameObject rock;
+
+
     [SerializeField] private GameObject testMarker;
 
     
@@ -30,6 +34,7 @@ public class TileManagerScript : MonoBehaviour
             Destroy(gameObject);
 
         GenerateGrid();
+        RandomlyGenerateObstical(3, rock);
     }
 
     void GenerateGrid()
@@ -79,7 +84,7 @@ public class TileManagerScript : MonoBehaviour
         return tiles[x][y];
     }
 
-    void GenerateObstical(int spawns, GameObject item)
+    void RandomlyGenerateObstical(int spawns, GameObject item)
     {
         for(int z = 0; z < spawns; z++)
         {
@@ -88,13 +93,13 @@ public class TileManagerScript : MonoBehaviour
             {
                 if(!foundSpot)
                 {
-                    var x = Random.Range(0, width);
-                    var y = Random.Range(0, height);
+                    var x = Random.Range(0, mapData.map.matrix.Count);
+                    var y = Random.Range(0, mapData.map.matrix[x].tiles.Count);
 
-                    if(!tiles[x][y].GetComponent<TileScript>().occupied)
+                    if(tiles[x][y].GetComponent<TileScript>().heldItem == null && tiles[x][y].GetComponent<TileScript>().tileType != TileType.empty)
                     {
                         GameObject newItem = Instantiate(item, new Vector3(x, y), transform.rotation);
-                        tiles[x][y].GetComponent<TileScript>().occupied = true;
+                        tiles[x][y].GetComponent<TileScript>().heldItem = newItem;
                         foundSpot = true;
 
                         newItem.transform.SetParent(gameObject.transform);
@@ -104,7 +109,7 @@ public class TileManagerScript : MonoBehaviour
         }
     }
 
-    void GenerateBigObstical(int spawns, GameObject item)
+    void RandomlyGenerateBigObstical(int spawns, GameObject item)
     {
         for(int z = 0; z < spawns; z++)
         {
@@ -117,14 +122,14 @@ public class TileManagerScript : MonoBehaviour
                 {
                     Vector2 size = item.transform.localScale;
 
-                    int x = Random.Range(0, (int)(width - size.x));
-                    int y = Random.Range(0, (int)(height - size.y));
+                    int x = Random.Range(0, (int)(mapData.map.matrix.Count - size.x));
+                    int y = Random.Range(0, (int)(mapData.map.matrix[x].tiles.Count - size.y));
 
                     for(int a = 0; a < size.x; a++)
                     {
                         for(int b = 0; b < size.y; b++)
                         {
-                            if(tiles[x + a][y + b].GetComponent<TileScript>().occupied)
+                            if(tiles[x + a][y + b].GetComponent<TileScript>().heldItem != null && tiles[x + a][y + b].GetComponent<TileScript>().tileType != TileType.empty)
                             {
                                 tilesUnoccupied = false;
                             }
@@ -138,7 +143,7 @@ public class TileManagerScript : MonoBehaviour
                         for(int a = 0; a < size.x; a++)
                         {
                             for(int b = 0; b < size.y; b++)
-                                tiles[x + a][y + b].GetComponent<TileScript>().occupied = true;
+                                tiles[x + a][y + b].GetComponent<TileScript>().heldItem = newItem;
                         }
 
                         foundSpot = true;

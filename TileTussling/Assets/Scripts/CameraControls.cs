@@ -36,17 +36,26 @@ public class CameraControls : MonoBehaviour
         // testPoint.transform.position = transform.position - new Vector3(cam.orthographicSize * cam.aspect, cam.orthographicSize);
         ClampPosition();
 
-        // if(Input.GetMouseButton(0))
-        // {
-        // }
+        if(Input.GetMouseButtonDown(0))
+        {
+            TileScript.clearTileEffects.Invoke();
+            var clickPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            clickPoint += new Vector3(.5f, .5f);
+            TileManagerScript.Instance.GetTile((int)clickPoint.x, (int)clickPoint.y)?.GetComponent<TileScript>().GetTilesOfDistance(2);
+        }
+
+        if(Input.GetKey(KeyCode.LeftShift))
+            Hover();
+        if(Input.GetKeyUp(KeyCode.LeftShift))
+            TileScript.clearTileEffects.Invoke();
     }
 
     public void Hover()
     {   
         TileScript.clearTileEffects.Invoke();
-        var clickPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        clickPoint += new Vector3(.5f, .5f);
-        TileManagerScript.Instance.GetTile((int)clickPoint.x, (int)clickPoint.y)?.GetComponent<TileScript>().MakeBlue();
+        var mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePoint += new Vector3(.5f, .5f);
+        TileManagerScript.Instance.GetTile((int)mousePoint.x, (int)mousePoint.y)?.GetComponent<TileScript>().MakeBlue();
     }
 
     public void ClampPosition()
