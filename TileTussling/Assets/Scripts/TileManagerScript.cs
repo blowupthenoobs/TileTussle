@@ -99,10 +99,10 @@ public class TileManagerScript : MonoBehaviour
                     if(tiles[x][y].GetComponent<TileScript>().heldItem == null && tiles[x][y].GetComponent<TileScript>().tileType != TileType.empty)
                     {
                         GameObject newItem = Instantiate(item, new Vector3(x, y), transform.rotation);
-                        tiles[x][y].GetComponent<TileScript>().heldItem = newItem;
+                        tiles[x][y].GetComponent<TileScript>().ObtainItem(newItem);
                         foundSpot = true;
 
-                        newItem.transform.SetParent(gameObject.transform);
+                        // newItem.transform.SetParent(gameObject.transform);
                     }
                 }
             }
@@ -143,12 +143,12 @@ public class TileManagerScript : MonoBehaviour
                         for(int a = 0; a < size.x; a++)
                         {
                             for(int b = 0; b < size.y; b++)
-                                tiles[x + a][y + b].GetComponent<TileScript>().heldItem = newItem;
+                                tiles[x + a][y + b].GetComponent<TileScript>().ObtainItem(newItem);
                         }
 
                         foundSpot = true;
 
-                        newItem.transform.SetParent(gameObject.transform);
+                        // newItem.transform.SetParent(gameObject.transform);
                     }
                 }
             }

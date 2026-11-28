@@ -41,7 +41,7 @@ public class CameraControls : MonoBehaviour
             TileScript.clearTileEffects.Invoke();
             var clickPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             clickPoint += new Vector3(.5f, .5f);
-            TileManagerScript.Instance.GetTile((int)clickPoint.x, (int)clickPoint.y)?.GetComponent<TileScript>().GetTilesOfDistance(2);
+            TileManagerScript.Instance.GetTile((int)clickPoint.x, (int)clickPoint.y)?.GetComponent<TileScript>().GetTilesOfDistance(4);
         }
 
         if(Input.GetKey(KeyCode.LeftShift))

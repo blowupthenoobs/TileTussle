@@ -37,6 +37,16 @@ public class TileScript : MonoBehaviour
         item.transform.SetParent(transform);
     }
 
+    public void RelinquishItem()
+    {
+        heldItem = null;
+    }
+
+    public void DamageHeldItem()
+    {
+        heldItem.SendMessage("AttackItem");
+    }
+
     void GetNeighbors()
     {
         leftTile = TileManagerScript.Instance.GetTile((int)transform.position.x - 1, (int)transform.position.y)?.GetComponent<TileScript>();
@@ -51,9 +61,17 @@ public class TileScript : MonoBehaviour
         GetComponent<SpriteRenderer>().color = Color.blue;
     }
 
+    public void MakeRed()
+    {
+        if(heldItem != null)
+            GetComponent<SpriteRenderer>().color = Color.red;
+    }
+
     public void GetTilesOfDistance(int distance)
     {
-        if(tileType != TileType.empty)
+        if(heldItem != null && heldItem.tag != "Player")
+            MakeRed();
+        else if(tileType != TileType.empty)
         {
             MakeBlue();
 
@@ -64,8 +82,22 @@ public class TileScript : MonoBehaviour
                 leftTile.GetTilesOfDistance(distance - 1);
                 bottomTile.GetTilesOfDistance(distance - 1);    
             }
+            if(distance == 0)
+            {
+                rightTile.MakeRed();
+                topTile.MakeRed();
+                leftTile.MakeRed();
+                bottomTile.MakeRed();
+            }
         }
     }
+
+    public void PassHeldItemToDirection(Vector2 direction)
+    {
+        GetNeighborOfDirection(direction).ObtainItem(heldItem);
+        heldItem = null;
+    }
+
 
 
     public TileScript GetNeighborOfDirection(Vector2 direction)
