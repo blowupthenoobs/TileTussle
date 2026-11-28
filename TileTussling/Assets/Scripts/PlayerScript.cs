@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerScript : TileItemScript
 {
-    
+    public static GameObject player;
     public enum MoveAction {up, down, left, right, attackUp, attackDown, attackLeft, attackRight};
     [SerializeField] GameObject movementMarker;
     public List<MoveAction> path = new List<MoveAction>();
@@ -19,6 +19,7 @@ public class PlayerScript : TileItemScript
 
     void Awake()
     {
+        player = gameObject;
         lineRender = movementMarker.GetComponent<LineRenderer>();
         ResetMovementPath();
     }

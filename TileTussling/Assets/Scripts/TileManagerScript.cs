@@ -15,8 +15,8 @@ public class TileManagerScript : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
 
-    [SerializeField] private GameObject tree;
-    [SerializeField] private GameObject rock;
+    public GameObject tree;
+    public GameObject rock;
 
 
     [SerializeField] private GameObject testMarker;

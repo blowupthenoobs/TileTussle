@@ -100,6 +100,10 @@ public class CustomMapData : PropertyDrawer
                 return Color.green;
             case TileType.sand:
                 return Color.yellow;
+            case TileType.rockGrass:
+                return Color.gray;
+            case TileType.rockSand:
+                return Color.gray;
             case TileType.playerGrass:
                 return Color.white;
             case TileType.enemyGrass:

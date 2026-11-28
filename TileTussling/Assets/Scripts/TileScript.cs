@@ -21,14 +21,31 @@ public class TileScript : MonoBehaviour
     public void Spawn(TileType type)
     {
         tileType = type;
-        GetComponent<SpriteRenderer>().color = GetTileColor(type);
         GetNeighbors();
         clearTileEffects += ResetTileColor;
 
+        if(type == TileType.rockGrass)
+        {
+            ObtainItem(Instantiate(TileManagerScript.Instance.rock, transform.position, transform.rotation));
+            tileType = TileType.grass;    
+        }
+        if(type == TileType.rockSand)
+        {
+            ObtainItem(Instantiate(TileManagerScript.Instance.rock, transform.position, transform.rotation));
+            tileType = TileType.sand;    
+        }
         if(type == TileType.playerGrass)
+        {
             ObtainItem(Instantiate(TileManagerScript.Instance.playerPrefab, transform.position, transform.rotation));
+            tileType = TileType.grass;    
+        }
         if(type == TileType.enemyGrass)
+        {
             ObtainItem(Instantiate(TileManagerScript.Instance.enemyPrefab, transform.position, transform.rotation));
+            tileType = TileType.grass;    
+        }
+        
+        GetComponent<SpriteRenderer>().color = GetTileColor(tileType);
     }
 
     public void ObtainItem(GameObject item)
@@ -63,7 +80,7 @@ public class TileScript : MonoBehaviour
 
     public void MakeRed()
     {
-        if(heldItem != null)
+        if(heldItem != null && heldItem.tag != "Player")
             GetComponent<SpriteRenderer>().color = Color.red;
     }
 
